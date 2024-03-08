@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using P2FixAnAppDotNetCode.Models;
 using P2FixAnAppDotNetCode.Models.Repositories;
@@ -40,7 +41,7 @@ namespace P2FixAnAppDotNetCode.Tests
             cart.AddItem(products.First(p => p.Id == 5), 1);
             double averageValue = cart.GetAverageValue();
             double expectedValue = (9.99 * 2 + 895.00) / 3;
-
+            
             Assert.Equal(expectedValue, averageValue);
         }
 
@@ -56,8 +57,9 @@ namespace P2FixAnAppDotNetCode.Tests
             cart.AddItem(products.First(p => p.Id == 1), 1);
             cart.AddItem(products.First(p => p.Id == 4), 3);
             cart.AddItem(products.First(p => p.Id == 5), 1);
+            cart.AddItem(products.First(p => p.Id == 2), 2);
             double totalValue = cart.GetTotalValue();
-            double expectedValue = 92.50 + 32.50 * 3 + 895.00;
+            double expectedValue = 9.99 * 2 + 92.50 + 32.50 * 3 + 895.00;
 
             Assert.Equal(expectedValue, totalValue);
         }
