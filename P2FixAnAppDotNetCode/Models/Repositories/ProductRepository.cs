@@ -32,10 +32,17 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
         /// <summary>
         /// Get all products from the inventory
         /// </summary>
-        public Product[] GetAllProducts()
+        public List<Product> GetAllProducts()
         {
+<<<<<<< HEAD
+            List<Product> list= new List<Product>();
+           
+                list = _products.Where(p => p.Stock > 0).OrderBy(p => p.Name).ToList();
+                            
+=======
             List<Product> list = _products.Where(p => p.Stock > 0).OrderBy(p => p.Name).ToList();
-            return list.ToArray();
+>>>>>>> b88ea14ae962011dd9403e0be90b53b19ce7d7fd
+            return list;
         }
 
         /// <summary>
@@ -48,6 +55,25 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
 
             if (product.Stock == 0)
                 _products.Remove(product);
+        }
+<<<<<<< HEAD
+        /// <summary>
+        /// Get product from the inventory with id product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Product GetProductById(int id)
+        {
+
+            List<Product> allProduct = GetAllProducts();
+=======
+
+        public Product GetProductById(int id)
+        {
+>>>>>>> b88ea14ae962011dd9403e0be90b53b19ce7d7fd
+            Product idProduct= _products.Where(p => p.Id == id).First();
+
+            return idProduct;
         }
     }
 }

@@ -4,6 +4,7 @@ using P2FixAnAppDotNetCode.Models;
 using P2FixAnAppDotNetCode.Models.Repositories;
 using P2FixAnAppDotNetCode.Models.Services;
 using Xunit;
+using System;
 
 namespace P2FixAnAppDotNetCode.Tests
 {
@@ -22,8 +23,8 @@ namespace P2FixAnAppDotNetCode.Tests
 
             var products = productService.GetAllProducts();
 
-            //Assert.IsType<List<Product>>(products);
-            Assert.IsType<Product[]>(products);
+            Assert.IsType<List<Product>>(products);
+            //Assert.IsType<Product[]>(products);
 
         }
 
@@ -74,6 +75,7 @@ namespace P2FixAnAppDotNetCode.Tests
 
             Assert.Same("JVC HAFX8R Headphone", product.Name);
             Assert.Equal(69.99, product.Price);
+           
         }
     }
 }
