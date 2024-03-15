@@ -1,5 +1,6 @@
 ﻿using P2FixAnAppDotNetCode.Models.Repositories;
-
+using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace P2FixAnAppDotNetCode.Models.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
-        readonly List<Product> productsInventory = new List<Product>();
+        List<Product> productsInventory = new List<Product>();
 
         public ProductService(IProductRepository productRepository, IOrderRepository orderRepository)
         {
@@ -24,14 +25,14 @@ namespace P2FixAnAppDotNetCode.Models.Services
         /// Get all product from the inventory
         /// </summary>
 
-        public List<Product> GetAllProducts()
+        public Product[] GetAllProducts()
         {
             // TODO change the return type from array to List<T> and propagate the change
             // throughout the application
             
             productsInventory.AddRange(_productRepository.GetAllProducts());
 
-            return productsInventory;
+            return productsInventory.ToArray();
 
         }
 
@@ -54,18 +55,32 @@ namespace P2FixAnAppDotNetCode.Models.Services
         {
             // TODO implement the method
             // update product inventory by using _productRepository.UpdateProductStocks() method.
-            Order order = new Order();
-            foreach (var cartLine in cart.Lines)
+            
+            foreach (CartLine cartLine in cart.Lines)
             {
                 _productRepository.UpdateProductStocks(cartLine.Product.Id, cartLine.Quantity);
-                 
-                   
-                    order.Lines = (ICollection<CartLine>)cartLine;
-              //  order.Lines.Add(carLine);
-              _orderRepository.Save(order);
-           
-            }           
-            
+         
+              
+            }
+            var order = new Order
+            {
+                Date = DateTime.Now,
+                Lines = cart.Lines.Select(cl => new CartLine
+                {
+                    OrderLineId = cl.OrderLineId,
+                    Product = cl.Product,
+                    Quantity = cl.Quantity
+                }).ToList()
+            };
+            _orderRepository.Save(order);
+
+            // Clear the cart after updating the stocks
+            cart.Clear();
+
+
+
+
+
 
 
 
@@ -73,5 +88,5 @@ namespace P2FixAnAppDotNetCode.Models.Services
     }
 
 
-    }
+}
 
