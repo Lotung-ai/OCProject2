@@ -1,5 +1,5 @@
 ﻿using P2FixAnAppDotNetCode.Models.Repositories;
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +12,7 @@ namespace P2FixAnAppDotNetCode.Models.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
-        readonly List<Product> productsInventory = new List<Product>();
+      
 
         public ProductService(IProductRepository productRepository, IOrderRepository orderRepository)
         {
@@ -24,17 +24,12 @@ namespace P2FixAnAppDotNetCode.Models.Services
         /// Get all product from the inventory
         /// </summary>
 
-        public List<Product> GetAllProducts()
+        public Product[] GetAllProducts()
         {
-            // TODO change the return type from array to List<T> and propagate the change
-            // throughout the application
-            
-            productsInventory.AddRange(_productRepository.GetAllProducts());
-
-            return productsInventory;
-
+            List<Product> productsInventory = _productRepository.GetAllProducts().ToList();
+                     
+            return productsInventory.ToArray();
         }
-
 
         /// <summary>
         /// Get a product from the inventory by its id
@@ -54,18 +49,20 @@ namespace P2FixAnAppDotNetCode.Models.Services
         {
             // TODO implement the method
             // update product inventory by using _productRepository.UpdateProductStocks() method.
-            Order order = new Order();
-            foreach (var cartLine in cart.Lines)
+           
+            Order order = new Order
+            {
+                Date = DateTime.Now,
+                Lines = cart.Lines.ToList()
+            };
+
+            foreach (CartLine cartLine in cart.Lines)
             {
                 _productRepository.UpdateProductStocks(cartLine.Product.Id, cartLine.Quantity);
-                 
-                   
-                    order.Lines = (ICollection<CartLine>)cartLine;
-              //  order.Lines.Add(carLine);
-              _orderRepository.Save(order);
-           
-            }           
-            
+            }
+
+            _orderRepository.Save(order);
+         
 
 
 
