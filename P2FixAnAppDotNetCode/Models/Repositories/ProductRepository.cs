@@ -34,8 +34,14 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
         /// </summary>
         public List<Product> GetAllProducts()
         {
+<<<<<<< HEAD
+            List<Product> list= new List<Product>();
+           
+                list = _products.Where(p => p.Stock > 0).OrderBy(p => p.Name).ToList();
+                            
+=======
             List<Product> list = _products.Where(p => p.Stock > 0).OrderBy(p => p.Name).ToList();
-            return list;
+            return list.ToArray();
         }
 
         /// <summary>
@@ -48,13 +54,6 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
 
             if (product.Stock == 0)
                 _products.Remove(product);
-        }
-
-        public Product GetProductById(int id)
-        {
-            Product idProduct= _products.Where(p => p.Id == id).First();
-
-            return idProduct;
         }
     }
 }
