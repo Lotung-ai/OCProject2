@@ -27,7 +27,26 @@ namespace P2FixAnAppDotNetCode.Models.Services
         public Product[] GetAllProducts()
         {
             List<Product> productsInventory = _productRepository.GetAllProducts().ToList();
-                     
+            productsInventory = _productRepository.GetAllProducts().ToList();
+
+            List<Order> orders = _orderRepository.GetAllOrders();
+
+            foreach (Order order in orders)
+            {
+                foreach (CartLine orderLine in order.Lines)
+                {
+                    Product productToUpdate = productsInventory.FirstOrDefault(p => p.Id == orderLine.Product.Id);
+
+                    if (productToUpdate != null)
+                    {
+                        productToUpdate.Stock -= orderLine.Quantity;
+                        if (productToUpdate.Stock <= 0)
+                        {
+                            productsInventory.Remove(productToUpdate);
+                        }
+                    }
+                }
+            }
             return productsInventory.ToArray();
         }
 
@@ -48,27 +67,22 @@ namespace P2FixAnAppDotNetCode.Models.Services
         public void UpdateProductQuantities(Cart cart)
         {
             // TODO implement the method
-            // update product inventory by using _productRepository.UpdateProductStocks() method.
-           
-            Order order = new Order
-            {
-                Date = DateTime.Now,
-                Lines = cart.Lines.ToList()
-            };
-
+            // update product inventory by using _productRepository.UpdateProductStocks() method.                      0
+            int id = 0;
             foreach (CartLine cartLine in cart.Lines)
             {
+                id++;
                 _productRepository.UpdateProductStocks(cartLine.Product.Id, cartLine.Quantity);
+                
             }
-
+            Order order = new Order
+            {
+          OrderId= id,
+                Date = DateTime.Now,
+                Lines = cart.Lines.ToArray()
+            };
             _orderRepository.Save(order);
-         
-
-
-
         }
     }
-
-
-    }
+}
 

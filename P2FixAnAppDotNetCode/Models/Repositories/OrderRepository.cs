@@ -14,12 +14,18 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
             _orders = new List<Order>();
         }
 
+
+
         /// <summary>
         /// Saves an order
         /// </summary>
         public void Save(Order order)
         {
             _orders.Add(order);
+        }
+        public List<Order> GetAllOrders()
+        {
+            return _orders;
         }
     }
 }
