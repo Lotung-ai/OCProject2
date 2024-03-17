@@ -13,8 +13,8 @@ namespace P2FixAnAppDotNetCode.Models.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
-        List<Product> productsInventory = new List<Product>();
-
+        List<Product> productsInventory;
+        List<Order> orders;
         public ProductService(IProductRepository productRepository, IOrderRepository orderRepository)
         {
             _productRepository = productRepository;
@@ -24,18 +24,36 @@ namespace P2FixAnAppDotNetCode.Models.Services
         /// <summary>
         /// Get all product from the inventory
         /// </summary>
-
+     
         public Product[] GetAllProducts()
         {
-            // TODO change the return type from array to List<T> and propagate the change
-            // throughout the application
-            
-            productsInventory.AddRange(_productRepository.GetAllProducts());
+            if (productsInventory == null)
+            {
+                productsInventory = _productRepository.GetAllProducts().ToList();
 
+                Console.WriteLine(productsInventory);
+            }
+                orders = _orderRepository.GetAllOrders();
+            Console.WriteLine(orders);
+         /*   foreach (Order order in orders)
+            {
+                foreach (CartLine orderLine in order.Lines)
+                {
+
+                    Product productToUpdate = productsInventory.FirstOrDefault(p => p.Id == orderLine.Product.Id);
+
+                    if (productToUpdate != null)
+                    {
+                        productToUpdate.Stock -= orderLine.Quantity;
+                        if (productToUpdate.Stock <= 0)
+                        {
+                            productsInventory.Remove(productToUpdate);
+                        }
+                    }
+                }
+            }*/
             return productsInventory.ToArray();
-
         }
-
 
         /// <summary>
         /// Get a product from the inventory by its id
@@ -54,39 +72,24 @@ namespace P2FixAnAppDotNetCode.Models.Services
         public void UpdateProductQuantities(Cart cart)
         {
             // TODO implement the method
-            // update product inventory by using _productRepository.UpdateProductStocks() method.
-            
+            // update product inventory by using _productRepository.UpdateProductStocks() method.                      
+           
             foreach (CartLine cartLine in cart.Lines)
             {
+               
                 _productRepository.UpdateProductStocks(cartLine.Product.Id, cartLine.Quantity);
-         
-              
+                
             }
-            var order = new Order
+        /*    Order order= new Order 
             {
+                OrderId = id,
                 Date = DateTime.Now,
-                Lines = cart.Lines.Select(cl => new CartLine
-                {
-                    OrderLineId = cl.OrderLineId,
-                    Product = cl.Product,
-                    Quantity = cl.Quantity
-                }).ToList()
-            };
+               Lines = cart.Lines.ToArray()
+           };
+            Console.WriteLine(order);
             _orderRepository.Save(order);
-
-            // Clear the cart after updating the stocks
-            cart.Clear();
-
-
-
-
-
-
-
-
+            Console.WriteLine(order);*/
         }
     }
-
-
 }
 

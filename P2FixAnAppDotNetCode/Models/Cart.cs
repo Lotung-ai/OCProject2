@@ -12,7 +12,7 @@ namespace P2FixAnAppDotNetCode.Models
         /// <summary>
         /// Read-only property for display only
         /// </summary>
-        public IEnumerable<CartLine> Lines => _cartLines;
+        public List<CartLine> Lines => _cartLines;
 
         /// <summary>
         /// Return the actual cartline list
