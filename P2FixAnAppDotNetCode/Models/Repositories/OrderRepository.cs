@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace P2FixAnAppDotNetCode.Models.Repositories
 {
@@ -14,12 +15,21 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
             _orders = new List<Order>();
         }
 
+
+
         /// <summary>
         /// Saves an order
         /// </summary>
         public void Save(Order order)
         {
             _orders.Add(order);
+
+            Console.WriteLine(order);
+
+        }
+        public List<Order> GetAllOrders()
+        {
+            return _orders;
         }
     }
 }

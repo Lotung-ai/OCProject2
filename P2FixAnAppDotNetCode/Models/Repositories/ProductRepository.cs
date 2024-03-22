@@ -9,11 +9,17 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
     public class ProductRepository : IProductRepository
     {
         private static List<Product> _products;
+        private static bool _isInventoryLoaded = false;
 
         public ProductRepository()
         {
-            _products = new List<Product>();
-            GenerateProductData();
+            if (!_isInventoryLoaded)
+            {
+                _products = new List<Product>();
+                GenerateProductData();
+                _isInventoryLoaded = true;
+            }
+           
         }
 
         /// <summary>
@@ -34,8 +40,10 @@ namespace P2FixAnAppDotNetCode.Models.Repositories
         /// </summary>
         public Product[] GetAllProducts()
         {
-            List<Product> list = _products.Where(p => p.Stock > 0).OrderBy(p => p.Name).ToList();
 
+
+            List<Product> list = _products.Where(p => p.Stock > 0).OrderBy(p => p.Name).ToList();
+            
                        return list.ToArray();
         }
 
